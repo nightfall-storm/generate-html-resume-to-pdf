@@ -20,6 +20,9 @@ const sampleData = {
     'Node.js',
     'Next.js',
     'GraphQL',
+    'Tailwind CSS',
+    'CSS',
+    'HTML',
     'AWS',
     'Docker',
     'CI/CD'
@@ -58,7 +61,25 @@ const sampleData = {
       description: 'Focus on Distributed Systems and Machine Learning'
     },
     {
-      degree: 'Bachelor of Science in Software Engineering',
+      degree: 'Bachelor of Science in Software Engineeringg',
+      institution: 'MIT',
+      period: '2012 - 2016',
+      description: 'Graduated with Honors, GPA 3.8/4.0'
+    },
+    {
+      degree: 'Bachelor of Science in Software Engineeringgg',
+      institution: 'MIT',
+      period: '2012 - 2016',
+      description: 'Graduated with Honors, GPA 3.8/4.0'
+    },
+    {
+      degree: 'Bachelor of Science in Software Engineeringggg',
+      institution: 'MIT',
+      period: '2012 - 2016',
+      description: 'Graduated with Honors, GPA 3.8/4.0'
+    },
+    {
+      degree: 'Bachelor of Science in Software Engineeringa',
       institution: 'MIT',
       period: '2012 - 2016',
       description: 'Graduated with Honors, GPA 3.8/4.0'
@@ -86,16 +107,17 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-[210mm] mx-auto" ref={resumeRef}>
+      <div className="min-w-[210mm] mx-auto" ref={resumeRef}>
         <div className="flex bg-white shadow-lg" style={{
           width: '210mm',
-          height: '297mm',
+          minHeight: '297mm',
           margin: '0 auto',
           padding: '0',
-          overflow: 'hidden'
         }}>
           {/* Left Sidebar */}
-          <div className="w-1/3 bg-[#1B2F3D] text-white p-6 space-y-6" style={{ height: '297mm' }}>
+          <div className="w-1/3 bg-[#1B2F3D] text-white p-6 space-y-6" style={{
+            minHeight: '297mm'
+          }}>
             <div className="flex flex-col items-center text-center">
               <Avatar className="w-48 h-48 rounded-full border-4 border-[#29ABE2] mb-4">
                 <AvatarImage
@@ -185,7 +207,9 @@ export default function Home() {
           </div>
 
           {/* Right Content */}
-          <div className="w-2/3 p-8 space-y-8">
+          <div className="w-2/3 p-8 space-y-8" style={{
+            minHeight: '297mm'
+          }}>
             {/* Header */}
             <div className="space-y-2">
               <h1 className="text-4xl font-bold text-[#1B2F3D]">{sampleData.personalInfo.name}</h1>

@@ -22,8 +22,6 @@ export const generatePDF = async ({ element, isImageLoaded, filename = 'resume.p
       logging: true,
       dpi: 300,
       letterRendering: true,
-      width: 794, // A4 width in pixels at 96 DPI
-      height: 1123, // A4 height in pixels at 96 DPI
     },
     jsPDF: {
       unit: 'mm',
@@ -32,26 +30,18 @@ export const generatePDF = async ({ element, isImageLoaded, filename = 'resume.p
       compress: true,
       putOnlyUsedFonts: true,
       precision: 2,
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      pagebreak: {
+        mode: ['css', 'legacy'],
+        before: '.page-break'
+      }
     }
   };
 
   try {
     await html2pdf()
-    .set(opt)
-    .from(element)
-    .toPdf()
-    .get('pdf')
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .then((pdf: any) => {
-      // Remove any blank pages
-      if (pdf.internal.getNumberOfPages() > 1) {
-        for (let i = pdf.internal.getNumberOfPages(); i > 1; i--) {
-          pdf.deletePage(i);
-        }
-      }
-      pdf.save(filename);
-    });
+      .set(opt)
+      .from(element)
+      .save();
   } catch (error) {
     console.error('Error generating PDF:', error)
     throw error
