@@ -1,101 +1,248 @@
-import Image from "next/image";
+'use client'
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { generatePDF } from '@/lib'
+import { useRef, useState } from 'react'
+
+const sampleData = {
+  personalInfo: {
+    name: 'John Doe',
+    title: 'Senior Software Engineer',
+    avatar: '/avatar.jpg',
+    email: 'john.doe@example.com',
+    phone: '+1 (555) 123-4567',
+    location: 'San Francisco, CA',
+    about: 'Passionate software engineer with 5+ years of experience in building scalable web applications. Focused on creating efficient, maintainable, and user-friendly solutions using modern technologies.'
+  },
+  skills: [
+    'React.js',
+    'TypeScript',
+    'Node.js',
+    'Next.js',
+    'GraphQL',
+    'AWS',
+    'Docker',
+    'CI/CD'
+  ],
+  softSkills: [
+    'Team Leadership',
+    'Problem Solving',
+    'Communication',
+    'Agile Methodology',
+    'Project Management'
+  ],
+  languages: [
+    { name: 'English', level: 'Native' },
+    { name: 'Spanish', level: 'Professional' },
+    { name: 'French', level: 'Intermediate' }
+  ],
+  experience: [
+    {
+      role: 'Senior Software Engineer',
+      company: 'Tech Solutions Inc.',
+      period: '2020 - Present',
+      description: 'Led a team of 5 developers in building a cloud-based SaaS platform. Implemented microservices architecture and reduced system latency by 40%.'
+    },
+    {
+      role: 'Software Engineer',
+      company: 'Digital Innovations Ltd.',
+      period: '2018 - 2020',
+      description: 'Developed and maintained multiple client-facing web applications using React and Node.js.'
+    }
+  ],
+  education: [
+    {
+      degree: 'Master of Science in Computer Science',
+      institution: 'Stanford University',
+      period: '2016 - 2018',
+      description: 'Focus on Distributed Systems and Machine Learning'
+    },
+    {
+      degree: 'Bachelor of Science in Software Engineering',
+      institution: 'MIT',
+      period: '2012 - 2016',
+      description: 'Graduated with Honors, GPA 3.8/4.0'
+    }
+  ]
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const resumeRef = useRef<HTMLDivElement>(null)
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleGeneratePDF = async () => {
+    if (!resumeRef.current) return
+
+    try {
+      await generatePDF({
+        element: resumeRef.current,
+        isImageLoaded,
+        filename: 'resume.pdf'
+      })
+    } catch (error) {
+      console.error('Failed to generate PDF:', error)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="max-w-[210mm] mx-auto" ref={resumeRef}>
+        <div className="flex bg-white shadow-lg" style={{
+          width: '210mm',
+          height: '297mm',
+          margin: '0 auto',
+          padding: '0',
+          overflow: 'hidden'
+        }}>
+          {/* Left Sidebar */}
+          <div className="w-1/3 bg-[#1B2F3D] text-white p-6 space-y-6" style={{ height: '297mm' }}>
+            <div className="flex flex-col items-center text-center">
+              <Avatar className="w-48 h-48 rounded-full border-4 border-[#29ABE2] mb-4">
+                <AvatarImage
+                  src={sampleData.personalInfo.avatar}
+                  className="rounded-full"
+                  onLoad={() => setIsImageLoaded(true)}
+                  onError={() => setIsImageLoaded(false)}
+                />
+                <AvatarFallback>JD</AvatarFallback>
+              </Avatar>
+            </div>
+
+            {/* Contact Section */}
+            <div className="space-y-6">
+              <h3 className="text-[#29ABE2] text-xl font-semibold border-b-2 border-[#29ABE2] pb-2">CONTACT</h3>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <span className="text-[#29ABE2]">📱</span>
+                  <span>{sampleData.personalInfo.phone}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-[#29ABE2]">✉️</span>
+                  <span>{sampleData.personalInfo.email}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-[#29ABE2]">📍</span>
+                  <span>{sampleData.personalInfo.location}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Skills Section */}
+            <div className="space-y-4">
+              <h3 className="text-[#29ABE2] text-xl font-semibold border-b-2 border-[#29ABE2] pb-2">SKILLS</h3>
+              <ul className="space-y-2">
+                {sampleData.skills.map((skill) => (
+                  <li key={skill} className="flex items-center gap-2">
+                    <span className="text-[#29ABE2]">•</span>
+                    {skill}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Languages Section */}
+            <div className="space-y-4">
+              <h3 className="text-[#29ABE2] text-xl font-semibold border-b-2 border-[#29ABE2] pb-2">LANGUAGES</h3>
+              <div className="space-y-3">
+                {sampleData.languages.map((language) => (
+                  <div key={language.name} className="space-y-1">
+                    <div className="flex justify-between">
+                      <span>{language.name}</span>
+                      <span>{language.level}</span>
+                    </div>
+                    <div className="w-full bg-gray-700 rounded-full h-1.5">
+                      <div
+                        className="bg-[#29ABE2] h-1.5 rounded-full"
+                        style={{
+                          width: language.level === 'Native' ? '100%' :
+                                 language.level === 'Professional' ? '80%' : '60%'
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Hobbies Section */}
+            <div className="space-y-4">
+              <h3 className="text-[#29ABE2] text-xl font-semibold border-b-2 border-[#29ABE2] pb-2">HOBBIES</h3>
+              <ul className="space-y-2">
+                <li className="flex items-center gap-2">
+                  <span className="text-[#29ABE2]">•</span>
+                  Reading
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-[#29ABE2]">•</span>
+                  Music
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-[#29ABE2]">•</span>
+                  Travel
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Right Content */}
+          <div className="w-2/3 p-8 space-y-8">
+            {/* Header */}
+            <div className="space-y-2">
+              <h1 className="text-4xl font-bold text-[#1B2F3D]">{sampleData.personalInfo.name}</h1>
+              <h2 className="text-2xl text-[#29ABE2]">{sampleData.personalInfo.title}</h2>
+              <p className="text-gray-600 mt-4">{sampleData.personalInfo.about}</p>
+            </div>
+
+            {/* Work Experience */}
+            <div className="space-y-6">
+              <h3 className="text-2xl font-semibold text-[#1B2F3D] border-b-2 border-[#29ABE2] pb-2">
+                WORK EXPERIENCE
+              </h3>
+              <div className="space-y-6">
+                {sampleData.experience.map((exp) => (
+                  <div key={exp.company} className="relative pl-6 border-l-2 border-[#29ABE2]">
+                    <div className="absolute w-3 h-3 bg-[#29ABE2] rounded-full -left-[7px] top-2"></div>
+                    <h4 className="text-xl font-semibold text-[#1B2F3D]">{exp.role}</h4>
+                    <div className="flex justify-between text-[#29ABE2]">
+                      <span>{exp.company}</span>
+                      <span>{exp.period}</span>
+                    </div>
+                    <p className="mt-2 text-gray-600">{exp.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Education */}
+            <div className="space-y-6">
+              <h3 className="text-2xl font-semibold text-[#1B2F3D] border-b-2 border-[#29ABE2] pb-2">
+                EDUCATION
+              </h3>
+              <div className="space-y-6">
+                {sampleData.education.map((edu) => (
+                  <div key={edu.degree} className="relative pl-6 border-l-2 border-[#29ABE2]">
+                    <div className="absolute w-3 h-3 bg-[#29ABE2] rounded-full -left-[7px] top-2"></div>
+                    <h4 className="text-xl font-semibold text-[#1B2F3D]">{edu.degree}</h4>
+                    <div className="flex justify-between text-[#29ABE2]">
+                      <span>{edu.institution}</span>
+                      <span>{edu.period}</span>
+                    </div>
+                    <p className="mt-2 text-gray-600">{edu.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+
+      {/* PDF Generation Button */}
+      <button
+        onClick={handleGeneratePDF}
+        className="mt-8 px-6 py-3 bg-[#29ABE2] text-white rounded-lg hover:bg-[#1B2F3D] transition-colors mx-auto block"
+      >
+        Download PDF Resume
+      </button>
     </div>
-  );
+  )
 }
